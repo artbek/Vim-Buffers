@@ -1,3 +1,4 @@
+" list buffers in messages area (no mouse events)
 function! Bbuf()
 
 	redir => buflist
@@ -9,15 +10,23 @@ function! Bbuf()
 	for i in bufitems
 		let step1 =  substitute(i, '[^ ]\zs  \+', ' ', 'g')
 		let step2 = split(step1, '"')
-		echo "[" . split(step2[0]," ")[0] . "] " . step2[1]
-	endfor
+		let path_items = split(step2[1], '\')
 
-	echo "\n"
-	let buf_num = input("Buffer number: ")
-	execute("b " . buf_num)
-	
+		echo "[" . split(step2[0]," ")[0] . "] " 
+		echon path_items[len(path_items) - 1]
+		echohl Comment
+		echon " (" . step2[1] . ")"
+		echohl None
+
+	endfor
+	let bn = input("\nBuffer number:")
+
+	execute("b ".bn)
+	"@=
+
 endfunction
 
+" list buffers in new window
 function! Bbuf2()
 
 	redir => buflist
@@ -33,8 +42,10 @@ function! Bbuf2()
 	for i in bufitems
 		let step1 =  substitute(i, '[^ ]\zs  \+', ' ', 'g')
 		let step2 = split(step1, '"')
-		execute("normal i [" . split(step2[0]," ")[0] . "] " . step2[1] . "\n")
+		let path_items = split(step2[1], '\')
+		execute("normal i [" . split(step2[0]," ")[0] . "] " . path_items[len(path_items) - 1] . " (" . step2[1] . ")\n")
 	endfor
+	match Comment /(.*)/
 
 	map <buffer> <2-LEFTMOUSE> :call Bbuf_open()<CR>
 	map <buffer> <CR> <2-LEFTMOUSE>
@@ -43,6 +54,7 @@ function! Bbuf2()
 	autocmd WinLeave <buffer> execute("bd!")
 endfunction
 
+" open double-clicked buffer
 function! Bbuf_open() 
 	let l:nobrackets = substitute(getline("."), '[\[\]]', '', 'g')
 	let l:buf_num = split(l:nobrackets, ' ')[0]
