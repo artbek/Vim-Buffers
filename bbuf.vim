@@ -42,7 +42,7 @@ function! Bbuf2()
 	for i in bufitems
 		let step1 =  substitute(i, '[^ ]\zs  \+', ' ', 'g')
 		let step2 = split(step1, '"')
-		let path_items = split(step2[1], '\')
+		let path_items = split(step2[1], '/')
 		execute("normal i [" . split(step2[0]," ")[0] . "] " . path_items[len(path_items) - 1] . " (" . step2[1] . ")\n")
 	endfor
 	match Comment /(.*)/
