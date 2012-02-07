@@ -1,0 +1,10 @@
+Display all open buffers (:ls) in a new window at the bottom.
+
+In the .vimrc file:
+nnoremap <F9> :call Bbuf2()<CR>
+
+And then:
+<F9> - show/hide list buffers
+<Esc> or [WinLeave] - hide list of buffers
+<2-LEFTMOUSE> or <CR> - open buffer in the previously active window
+
