@@ -12,7 +12,7 @@ function! Bbuf()
 		let step2 = split(step1, '"')
 		let path_items = split(step2[1], '\')
 
-		echo "[" . split(step2[0]," ")[0] . "] " 
+		echo "[" . split(step2[0]," ")[0] . "] "
 		echon path_items[len(path_items) - 1]
 		echohl Comment
 		echon " (" . step2[1] . ")"
@@ -43,7 +43,13 @@ function! Bbuf2()
 		let step1 =  substitute(i, '[^ ]\zs  \+', ' ', 'g')
 		let step2 = split(step1, '"')
 		let path_items = split(step2[1], '/')
-		execute("normal i [" . split(step2[0]," ")[0] . "] " . path_items[len(path_items) - 1] . " (" . step2[1] . ")\n")
+		let file_flags = split(step2[0], " ")[1]
+		if (strlen(file_flags) > 1)
+			let file_current = file_flags
+		else
+			let file_current = "  "
+		endif
+		execute("normal i" . file_current . " [" . split(step2[0]," ")[0] . "] " . path_items[len(path_items) - 1] . " (" . step2[1] . ")\n")
 	endfor
 	match Comment /(.*)/
 
@@ -55,10 +61,11 @@ function! Bbuf2()
 endfunction
 
 " open double-clicked buffer
-function! Bbuf_open() 
+function! Bbuf_open()
 	let l:nobrackets = substitute(getline("."), '[\[\]]', '', 'g')
-	let l:buf_num = split(l:nobrackets, ' ')[0]
+	let l:buf_num = split(l:nobrackets, ' ')[1]
 	bd!
 	wincmd p
 	execute("b " . l:buf_num)
 endfunction
+
