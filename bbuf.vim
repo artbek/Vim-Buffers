@@ -62,10 +62,12 @@ endfunction
 
 " open double-clicked buffer
 function! Bbuf_open()
-	let l:nobrackets = substitute(getline("."), '[\[\]]', '', 'g')
-	let l:buf_num = split(l:nobrackets, ' ')[1]
-	bd!
-	wincmd p
-	execute("b " . l:buf_num)
+	let l:nobrackets = split(getline("."), '[\[\]]')
+	if (len(l:nobrackets) > 1)
+		let l:buf_num = l:nobrackets[1]
+		bd!
+		wincmd p
+		execute("b " . l:buf_num)
+	endif
 endfunction
 
