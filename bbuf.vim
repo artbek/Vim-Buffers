@@ -1,31 +1,3 @@
-" list buffers in messages area (no mouse events)
-function! Bbuf()
-
-	redir => buflist
-	silent ls
-	redir END
-
-	let bufitems = split(buflist, "\n")
-	echo "\n"
-	for i in bufitems
-		let step1 =  substitute(i, '[^ ]\zs  \+', ' ', 'g')
-		let step2 = split(step1, '"')
-		let path_items = split(step2[1], '\')
-
-		echo "[" . split(step2[0]," ")[0] . "] "
-		echon path_items[len(path_items) - 1]
-		echohl Comment
-		echon " (" . step2[1] . ")"
-		echohl None
-
-	endfor
-	let bn = input("\nBuffer number:")
-
-	execute("b ".bn)
-	"@=
-
-endfunction
-
 " list buffers in new window
 function! Bbuf2()
 
@@ -35,12 +7,13 @@ function! Bbuf2()
 
 	let bufitems = split(buflist, "\n")
 	bo new
+	set nowrap
 	let &l:statusline = "Buffers list"
 	let l:ws = len(bufitems) + 1
 	echom l:ws
 	execute("resize " . l:ws)
 	for i in bufitems
-		let step1 =  substitute(i, '[^ ]\zs  \+', ' ', 'g')
+		let step1 = substitute(i, '[^ ]\zs  \+', ' ', 'g')
 		let step2 = split(step1, '"')
 		let path_items = split(step2[1], '/')
 		let file_flags = split(step2[0], " ")[1]
